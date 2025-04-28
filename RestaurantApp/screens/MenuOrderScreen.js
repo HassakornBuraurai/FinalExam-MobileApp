@@ -1,9 +1,20 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Alert } from 'react-native';
-import { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Alert, ScrollView } from 'react-native';
+import { useState, useContext } from 'react';
+import BookingContext from '../context/BookingContext';
 
-export default function MenuOrderScreen({ route }) {
-  const { menu } = route.params;
+export default function MenuOrderScreen() {
+  const { bookingInfo, setBookingInfo } = useContext(BookingContext);
   const [orderItems, setOrderItems] = useState([]);
+
+  if (!bookingInfo || !bookingInfo.menu) {
+    return (
+      <View style={styles.centered}>
+        <Text style={{ fontSize: 18 }}>Please book a restaurant first.</Text>
+      </View>
+    );
+  }
+
+  const menu = bookingInfo.menu;
 
   const handleAddItem = (item) => {
     setOrderItems((prev) => {
@@ -43,7 +54,20 @@ export default function MenuOrderScreen({ route }) {
       Alert.alert('Warning', 'Please select at least one item.');
       return;
     }
-    Alert.alert('Order Sent', 'The order has been sent');
+
+    let orderSummary = orderItems.map(
+      (item) => `${item.name} × ${item.quantity} = ฿${(item.price * item.quantity).toFixed(2)}`
+    ).join('\n');
+
+    orderSummary += `\n\nTotal: ฿${calculateTotal()}`;
+
+    // 💥 Save orderItems to BookingContext
+    setBookingInfo({
+      ...bookingInfo,
+      orderedItems: orderItems,
+    });
+
+    Alert.alert('Order Confirmed', orderSummary);
   };
 
   return (
@@ -60,57 +84,89 @@ export default function MenuOrderScreen({ route }) {
             </Text>
           </TouchableOpacity>
         )}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 20 }}
       />
 
       <Text style={styles.subtitle}>Your Order:</Text>
 
-      {orderItems.map((item, index) => (
-        <View key={index} style={styles.orderItemRow}>
-          <Text style={styles.orderItem}>
-            {item.name} × {item.quantity} (฿{(item.price * item.quantity).toFixed(2)})
-          </Text>
-          <View style={styles.buttonGroup}>
-            <Button title="+" onPress={() => handleAddItem(item)} />
-            <Button title="-" onPress={() => handleRemoveItem(item)} />
-          </View>
-        </View>
-      ))}
+      <ScrollView style={styles.orderList}>
+        {orderItems.length === 0 ? (
+          <Text style={styles.emptyOrder}>No items selected yet.</Text>
+        ) : (
+          orderItems.map((item, index) => (
+            <View key={index} style={styles.orderItemRow}>
+              <Text style={styles.orderItem}>
+                {item.name} × {item.quantity} (฿{(item.price * item.quantity).toFixed(2)})
+              </Text>
+              <View style={styles.buttonGroup}>
+                <Button title="+" onPress={() => handleAddItem(item)} />
+                <Button title="-" onPress={() => handleRemoveItem(item)} />
+              </View>
+            </View>
+          ))
+        )}
+      </ScrollView>
 
-      <Text style={styles.total}>รวมราคา: ฿{calculateTotal()}</Text>
+      <Text style={styles.total}>Total Price: ฿{calculateTotal()}</Text>
 
-      <View style={styles.confirmButton}>
-        <Button title="Confirm Order" onPress={handleConfirmOrder} />
-      </View>
+      <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmOrder}>
+        <Text style={styles.confirmButtonText}>Confirm Order</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FAFAFA',
     padding: 20,
+  },
+  centered: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#333',
   },
   item: {
     padding: 15,
-    backgroundColor: '#eee',
+    backgroundColor: '#fff',
     borderRadius: 10,
     marginBottom: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 2,
   },
   itemText: {
     fontSize: 18,
+    color: '#333',
   },
   subtitle: {
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 30,
     marginBottom: 10,
+    color: '#555',
+  },
+  orderList: {
+    maxHeight: 250,
+  },
+  emptyOrder: {
+    fontSize: 16,
+    color: 'gray',
+    textAlign: 'center',
+    marginTop: 20,
   },
   orderItemRow: {
     flexDirection: 'row',
@@ -121,6 +177,7 @@ const styles = StyleSheet.create({
   orderItem: {
     fontSize: 18,
     flex: 1,
+    color: '#333',
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -131,8 +188,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 30,
     textAlign: 'center',
+    color: '#333',
   },
   confirmButton: {
+    backgroundColor: '#FF7F50',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
     marginTop: 20,
+  },
+  confirmButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

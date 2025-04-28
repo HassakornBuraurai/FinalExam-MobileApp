@@ -29,7 +29,7 @@ const restaurants = [
     id: '3',
     name: 'City Lights Cafe',
     location: '789 Downtown Street',
-    image: 'https://images.unsplash.com/photo-1575653501839-ec9ff93e01fc',
+    image: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9',
     menu: [
       { id: '1', name: 'Pasta Alfredo', price: 300 },
       { id: '2', name: 'Mocha Latte', price: 90 },
