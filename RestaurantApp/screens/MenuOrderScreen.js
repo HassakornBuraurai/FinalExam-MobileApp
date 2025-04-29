@@ -61,7 +61,7 @@ export default function MenuOrderScreen() {
 
     orderSummary += `\n\nTotal: ฿${calculateTotal()}`;
 
-    // 💥 Save orderItems to BookingContext
+
     setBookingInfo({
       ...bookingInfo,
       orderedItems: orderItems,

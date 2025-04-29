@@ -1,7 +1,7 @@
 import { View, Text, Button, StyleSheet } from 'react-native';
 
 export default function BookingDetailScreen({ navigation, route }) {
-  const { bookingInfo } = route.params; // 👈 receive booking data
+  const { bookingInfo } = route.params; 
 
   const handleOrderFood = () => {
     navigation.navigate('MenuOrder', { menu: bookingInfo.menu });

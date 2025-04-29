@@ -34,7 +34,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA', // light background color
+    backgroundColor: '#FAFAFA', 
   },
   header: {
     fontSize: 28,
@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 16,
     overflow: 'hidden',
-    elevation: 3, // Android shadow
-    shadowColor: '#000', // iOS shadow
+    elevation: 3, 
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
