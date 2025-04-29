@@ -9,7 +9,7 @@ Framework ที่ใช้ (Framework Used): React Native (Expo)
 
 ลิงก์ GitHub Repository:[https://github.com/HassakornBuraurai/FinalExam-MobileApp]
 
-ลิงก์ไฟล์ติดตั้ง (APK/IPA): [ใส่ลิงก์ที่นี่ | Insert link here]
+ลิงก์ไฟล์ติดตั้ง (APK/IPA): [https://drive.google.com/drive/folders/1ES9fTQwTVeuxR86Tv7pzMKR9Ba9-9NDr?usp=drive_link]
 
 1. App Concept and Design (2 pts)
 
